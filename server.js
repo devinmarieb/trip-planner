@@ -4,6 +4,7 @@
 // const http = require('http')
 // const path = require('path')
 const bodyParser = require('body-parser')
+const pg = require('pg');
 const express = require('express')
 const app = express()
 
@@ -72,6 +73,17 @@ app.get('/api/trips/:id', (req, res)=> {
   database('trips').where('id', req.params.id).select()
     .then((trip)=> {
       res.status(200).json(trip)
+    })
+    .catch((error)=> {
+      console.error(error)
+    })
+})
+
+app.get('/api/trips/user/:id', (req, res)=> {
+  const { id } = req.params
+  database('trips').where('user_id', id).select()
+    .then((trips)=> {
+      res.status(200).json(trips.length)
     })
     .catch((error)=> {
       console.error(error)
