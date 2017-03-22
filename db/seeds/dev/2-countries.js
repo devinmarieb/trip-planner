@@ -4,152 +4,152 @@ exports.seed = function(knex, Promise) {
     return Promise.all([
 
       knex('countries').insert({
-        name: "Aruba",
+        name: 'Aruba',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Australia",
+        name: 'Australia',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Brazil",
+        name: 'Brazil',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Croatia",
+        name: 'Croatia',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Denmark",
+        name: 'Denmark',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Egypt",
+        name: 'Egypt',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Faroe Islands",
+        name: 'Faroe Islands',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Fiji",
+        name: 'Fiji',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Ghana",
+        name: 'Ghana',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Greenland",
+        name: 'Greenland',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Hungary",
+        name: 'Hungary',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Iceland",
+        name: 'Iceland',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Italy",
+        name: 'Italy',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Jamaica",
+        name: 'Jamaica',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Japan",
+        name: 'Japan',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Kiribati",
+        name: 'Kiribati',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Laos",
+        name: 'Laos',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Morocco",
+        name: 'Morocco',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "New Zealand",
+        name: 'New Zealand',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Oman",
+        name: 'Oman',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Peru",
+        name: 'Peru',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Qatar",
+        name: 'Qatar',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Romania",
+        name: 'Romania',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Syria",
+        name: 'Syria',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Turkey",
+        name: 'Turkey',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "UAE",
+        name: 'UAE',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Venezuela",
+        name: 'Venezuela',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Wales",
+        name: 'Wales',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Yemen",
+        name: 'Yemen',
         created_at: new Date
       }),
 
       knex('countries').insert({
-        name: "Zambia",
+        name: 'Zambia',
         created_at: new Date
       })
 

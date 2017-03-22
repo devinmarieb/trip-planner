@@ -79,7 +79,7 @@ app.get('/api/trips/:id', (req, res)=> {
 })
 
 app.post('/api/users', (req, res)=> {
-  const user = { name: req.params, created_at: new Date }
+  const user = { name: req.body.name, created_at: new Date }
   database('users').insert(user)
     .then(()=> {
       database('users').select()
@@ -93,7 +93,7 @@ app.post('/api/users', (req, res)=> {
 })
 
 app.post('/api/countries', (req, res)=> {
-  const country = { name: req.params, created_at: new Date }
+  const country = { name: req.body.name, created_at: new Date }
   database('countries').insert(country)
     .then(()=> {
       database('countries').select()
@@ -107,7 +107,7 @@ app.post('/api/countries', (req, res)=> {
 })
 
 app.post('/api/trips', (req, res)=> {
-  const trip = { country_id: req.params.country_id , user_id: req.params.user_id , created_at: new Date }
+  const trip = { country_id: req.body.country_id , user_id: req.body.user_id , created_at: new Date }
   database('trips').insert(trip)
     .then(()=> {
       database('trips').select()
@@ -117,6 +117,51 @@ app.post('/api/trips', (req, res)=> {
         .catch((error)=> {
           console.log(error)
         })
+    })
+})
+
+app.patch('/api/users/:id', (req, res)=> {
+  const { id } = req.params
+  database('users').where('id', id).select()
+    .then((user)=> {
+      let userName = req.body.name
+      database('users').where('id', id).select().update({ name: userName })
+        .then((users)=> {
+          res.status(200).json(users)
+        })
+    })
+    .catch((error)=> {
+      console.log(error)
+    })
+})
+
+app.patch('/api/countries/:id', (req, res)=> {
+  const { id } = req.params
+  database('countries').where('id', id).select()
+    .then((country)=> {
+      let countryName = req.body.name
+      database('countries').where('id', id).select().update({ name: countryName })
+        .then((countries)=> {
+          res.status(200).json(countries)
+        })
+    })
+    .catch((error)=> {
+      console.log(error)
+    })
+})
+
+app.patch('/api/trips/:id', (req, res)=> {
+  const { id } = req.params
+  database('trips').where('id', id).select()
+    .then((trip)=> {
+      let countryId = req.body.country_id
+      database('trips').where('id', id).select().update({ country_id: countryId })
+        .then((trips)=> {
+          res.status(200).json(trips)
+        })
+    })
+    .catch((error)=> {
+      console.log(error)
     })
 })
 

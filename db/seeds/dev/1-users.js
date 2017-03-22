@@ -4,152 +4,152 @@ exports.seed = function(knex, Promise) {
     return Promise.all([
 
       knex('users').insert({
-        name: "Devin Beliveau",
+        name: 'Devin Beliveau',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Justin Wood",
+        name: 'Justin Wood',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Dan Grund",
+        name: 'Dan Grund',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Alex Tideman",
+        name: 'Alex Tideman',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Meeka Gayhart",
+        name: 'Meeka Gayhart',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Noah Peden",
+        name: 'Noah Peden',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Taylor Moore",
+        name: 'Taylor Moore',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Sam Johnson",
+        name: 'Sam Johnson',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Dylan Avery",
+        name: 'Dylan Avery',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Brenna Martenson",
+        name: 'Brenna Martenson',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Mike Dao",
+        name: 'Mike Dao',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Yung Jhun",
+        name: 'Yung Jhun',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Bekah Lundy",
+        name: 'Bekah Lundy',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Gabi Procell",
+        name: 'Gabi Procell',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Mike Ziccardi",
+        name: 'Mike Ziccardi',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Mike Limberg",
+        name: 'Mike Limberg',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Bill Clinton",
+        name: 'Bill Clinton',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Anna Kendrick",
+        name: 'Anna Kendrick',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Tina Fey",
+        name: 'Tina Fey',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Ian Lancaster",
+        name: 'Ian Lancaster',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Kristen Burgess",
+        name: 'Kristen Burgess',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "George Clooney",
+        name: 'George Clooney',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Michael Jordan",
+        name: 'Michael Jordan',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Graham Nessler",
+        name: 'Graham Nessler',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Matt Kaufman",
+        name: 'Matt Kaufman',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Andrew Crist",
+        name: 'Andrew Crist',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Luke Skywalker",
+        name: 'Luke Skywalker',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "The Doctor",
+        name: 'The Doctor',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Ross Gellar",
+        name: 'Ross Gellar',
         created_at: new Date
       }),
 
       knex('users').insert({
-        name: "Dwayne Johnson",
+        name: 'Dwayne Johnson',
         created_at: new Date
       })
 
