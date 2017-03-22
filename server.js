@@ -165,6 +165,67 @@ app.patch('/api/trips/:id', (req, res)=> {
     })
 })
 
+app.delete('/api/users/:id', (req, res)=> {
+  const { id } = req.params
+  database('trips').where('user_id', id).select()
+    .then((trip)=> {
+      database('trips').where('user_id', id).select().del()
+        .then((user)=> {
+          database('users').where('id', id).select().del()
+            .then((users)=> {
+              res.status(200).json(users)
+            })
+        })
+    })
+    .catch((error)=> {
+      console.log(error)
+    })
+})
+
+app.delete('/api/countries/:id', (req, res)=> {
+  const { id } = req.params
+  database('trips').where('country_id', id).select()
+    .then((trip)=> {
+      database('trips').where('country_id', id).select().del()
+        .then((country)=> {
+          database('countries').where('id', id).select().del()
+            .then((countries)=> {
+              res.status(200).json(countries)
+            })
+        })
+    })
+    .catch((error)=> {
+      console.log(error)
+    })
+})
+
+app.delete('/api/trips/:id', (req, res)=> {
+  const { id } = req.params
+  database('trips').where('id', id).select()
+    .then((trip)=> {
+      database('trips').where('id', id).select().del()
+        .then((trips)=> {
+          res.status(200).json(trips)
+        })
+    })
+    .catch((error)=> {
+      console.log(error)
+    })
+})
+
+app.delete('/api/users/:tripId', (req, res)=> {
+  const { id } = req.params
+  database('trips').where('user_id', id).select()
+    .then((trip)=> {
+      database('trips').where('user_id', id).select().del()
+        .then((trips)=> {
+          res.status(200).json(trips)
+        })
+    })
+    .catch((error)=> {
+      console.log(error)
+    })
+})
 
 
 // if(!module.parent){
