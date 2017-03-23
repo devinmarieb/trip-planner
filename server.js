@@ -18,15 +18,27 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.set('port', process.env.PORT || 8080)
 
-//gets all users
+//gets all users + check for user query param
+//query param needs to be ?name='Devin%20Beliveau'
 app.get('/api/users', (req, res)=> {
-  database('users').select()
-  .then((users)=> {
-    res.status(200).json(users)
-  })
-  .catch((error)=> {
-    console.error(error)
-  })
+  let userQuery = req.query.name
+  if(userQuery) {
+    database('users').where('name', userQuery).select()
+      .then((user)=> {
+        res.status(200).json(user)
+      })
+    .catch((error)=> {
+      console.error(error)
+    })
+  } else {
+      database('users').select()
+      .then((users)=> {
+        res.status(200).json(users)
+    })
+      .catch((error)=> {
+        console.error(error)
+      })
+    }
 })
 
 //gets all countries
@@ -103,20 +115,20 @@ app.get('/api/trips/country/:id', (req, res)=> {
     .then((trips)=> {
       res.status(200).json(trips)
     })
-    .catch((error)=> {
-      console.error(error)
+  .catch((error)=> {
+    console.error(error)
     })
 })
 
 //gets the number of trips associated with a user
-app.get('/api/trips/user/:id', (req, res)=> {
+app.get('/api/user/:id/trips', (req, res)=> {
   const { id } = req.params
   database('trips').where('user_id', id).select()
     .then((trips)=> {
       res.status(200).json(trips.length)
     })
-    .catch((error)=> {
-      console.error(error)
+  .catch((error)=> {
+    console.error(error)
     })
 })
 
