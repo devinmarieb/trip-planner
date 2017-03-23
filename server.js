@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.set('port', process.env.PORT || 8080)
 
-
+//gets all users
 app.get('/api/users', (req, res)=> {
   database('users').select()
   .then((users)=> {
@@ -29,6 +29,7 @@ app.get('/api/users', (req, res)=> {
   })
 })
 
+//gets all countries
 app.get('/api/countries', (req, res)=> {
   database('countries').select()
     .then((countries)=> {
@@ -39,6 +40,7 @@ app.get('/api/countries', (req, res)=> {
     })
 })
 
+//gets all trips
 app.get('/api/trips', (req, res)=> {
   database('trips').select()
     .then((trips)=> {
@@ -49,6 +51,7 @@ app.get('/api/trips', (req, res)=> {
     })
 })
 
+//gets a specific user
 app.get('/api/users/:id', (req, res)=> {
   database('users').where('id', req.params.id).select()
   .then((user)=> {
@@ -59,6 +62,7 @@ app.get('/api/users/:id', (req, res)=> {
   })
 })
 
+//gets a specific country
 app.get('/api/countries/:id', (req, res)=> {
   database('countries').where('id', req.params.id).select()
     .then((country)=> {
@@ -69,6 +73,7 @@ app.get('/api/countries/:id', (req, res)=> {
     })
 })
 
+//gets a specific trip
 app.get('/api/trips/:id', (req, res)=> {
   database('trips').where('id', req.params.id).select()
     .then((trip)=> {
@@ -79,6 +84,31 @@ app.get('/api/trips/:id', (req, res)=> {
     })
 })
 
+//gets all trips associated with a user
+app.get('/api/trips/user/trips/:id', (req, res)=> {
+  const { id } = req.params
+  database('trips').where('user_id', id).select()
+    .then((trips)=> {
+      res.status(200).json(trips)
+    })
+    .catch((error)=> {
+      console.error(error)
+    })
+})
+
+//gets all trips associated with a country
+app.get('/api/trips/country/:id', (req, res)=> {
+  const { id } = req.params
+  database('trips').where('country_id', id).select()
+    .then((trips)=> {
+      res.status(200).json(trips)
+    })
+    .catch((error)=> {
+      console.error(error)
+    })
+})
+
+//gets the number of trips associated with a user
 app.get('/api/trips/user/:id', (req, res)=> {
   const { id } = req.params
   database('trips').where('user_id', id).select()
@@ -90,6 +120,7 @@ app.get('/api/trips/user/:id', (req, res)=> {
     })
 })
 
+//posts a new user
 app.post('/api/users', (req, res)=> {
   const user = { name: req.body.name, created_at: new Date }
   database('users').insert(user)
@@ -104,6 +135,7 @@ app.post('/api/users', (req, res)=> {
     })
 })
 
+//posts a new country
 app.post('/api/countries', (req, res)=> {
   const country = { name: req.body.name, created_at: new Date }
   database('countries').insert(country)
@@ -118,6 +150,7 @@ app.post('/api/countries', (req, res)=> {
     })
 })
 
+//posts a new trip
 app.post('/api/trips', (req, res)=> {
   const trip = { country_id: req.body.country_id , user_id: req.body.user_id , created_at: new Date }
   database('trips').insert(trip)
@@ -132,6 +165,7 @@ app.post('/api/trips', (req, res)=> {
     })
 })
 
+//updates the name of a user
 app.patch('/api/users/:id', (req, res)=> {
   const { id } = req.params
   database('users').where('id', id).select()
@@ -147,6 +181,7 @@ app.patch('/api/users/:id', (req, res)=> {
     })
 })
 
+//updates the name of a country
 app.patch('/api/countries/:id', (req, res)=> {
   const { id } = req.params
   database('countries').where('id', id).select()
@@ -162,6 +197,7 @@ app.patch('/api/countries/:id', (req, res)=> {
     })
 })
 
+//updates the country associated with the trip
 app.patch('/api/trips/:id', (req, res)=> {
   const { id } = req.params
   database('trips').where('id', id).select()
@@ -177,6 +213,7 @@ app.patch('/api/trips/:id', (req, res)=> {
     })
 })
 
+//deletes a user
 app.delete('/api/users/:id', (req, res)=> {
   const { id } = req.params
   database('trips').where('user_id', id).select()
@@ -194,6 +231,7 @@ app.delete('/api/users/:id', (req, res)=> {
     })
 })
 
+//deletes a country
 app.delete('/api/countries/:id', (req, res)=> {
   const { id } = req.params
   database('trips').where('country_id', id).select()
@@ -211,6 +249,7 @@ app.delete('/api/countries/:id', (req, res)=> {
     })
 })
 
+//deletes a trip
 app.delete('/api/trips/:id', (req, res)=> {
   const { id } = req.params
   database('trips').where('id', id).select()
@@ -225,23 +264,11 @@ app.delete('/api/trips/:id', (req, res)=> {
     })
 })
 
-app.delete('/api/users/:tripId', (req, res)=> {
-  const { id } = req.params
-  database('trips').where('user_id', id).select()
-    .then((trip)=> {
-      database('trips').where('user_id', id).select().del()
-        .then((trips)=> {
-          res.status(200).json(trips)
-        })
-    })
-    .catch((error)=> {
-      console.log(error)
-    })
-})
 
-
-// if(!module.parent){
+if(!module.parent){
   app.listen(app.get('port'), ()=> {
     console.log('Magic is running on 8080')
   })
-// }
+}
+
+module.exports = app
