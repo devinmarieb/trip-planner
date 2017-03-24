@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test'
+
 const chai = require('chai')
 const expect = chai.expect
 const should = chai.should
@@ -12,40 +14,21 @@ const database = require('knex')(configuration)
 
 describe('Server should', ()=> {
   beforeEach(function(done) {
-   const users = [
-     { name: 'Albus Dumbledore' },
-     { name: 'Severus Snape' }
-   ]
-
-   const countries = [
-     { name: 'Canada'},
-     { name: 'Mexico'}
-   ]
-
-   const trips = [
-     { country_id: 1, user_id: 1 },
-     { country_id: 2, user_id: 2 }
-   ]
-
-   database.schema.dropTable('trips')
-   .then(_ => database.schema.dropTable('countries'))
-   .then(_ => database.schema.dropTable('users'))
-   .then(function() {
-       database.schema.createTable('users', (table)=> {
-         table.string('name')
-       })
-       .then(_ => database.schema.createTable('countries', (table)=> {
-         table.string('name')
-       }))
-       .then(_ => database.schema.createTable('trips', (table)=> {
-         table.integer('country_id')
-         table.integer('user_id')
-       }))
+    database.migrate.rollback()
+     .then(function() {
+       database.migrate.latest()
        .then(function() {
-         done()
+           done()
        })
      })
-   })
+  })
+
+afterEach(function(done) {
+  database.migrate.rollback()
+  .then(()=> {
+    done()
+  })
+})
 
   // happy / sad path test for get all users //
   describe('GET /api/users', ()=> {
@@ -115,18 +98,22 @@ describe('Server should', ()=> {
 
   // happy / sad path test for getting a specific user
   describe('GET /api/users/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
     it('should return 200 with a specific user', (done)=> {
-      const user = {
-        id: 1,
-        name: 'Neville Longbottom'
-      }
       chai.request(app)
       .get('/api/users/1')
       .end((error, res)=> {
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(res).to.be.a('object')
-        expect(user.name).to.equal('Neville Longbottom')
+        expect(res.body[0].name).to.equal('Neville Longbottom')
         done()
       })
     })
@@ -142,18 +129,23 @@ describe('Server should', ()=> {
 
   // happy / sad path test for getting a specific country
   describe('GET /api/countries/:id', ()=> {
+    beforeEach(function(done){
+      database('countries').insert({
+              name: 'Canada',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+
     it('should return 200 with a specific country', (done)=> {
-      const country = {
-        id: 1,
-        name: 'Australia'
-      }
       chai.request(app)
       .get('/api/countries/1')
       .end((error, res)=> {
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(res).to.be.a('object')
-        expect(country.name).to.equal('Australia')
+        expect(res.body[0].name).to.equal('Canada')
         done()
       })
     })
@@ -169,20 +161,34 @@ describe('Server should', ()=> {
 
   // happy / sad path test for getting a specific trip
   describe('GET /api/trips/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                database('trips').insert({
+                  user_id: 1,
+                  country_id: 1,
+                  created_at: new Date
+                }).then(function(){
+                  done()
+                })
+              })
+            })
+    })
     it('should return 200 with a specific trip', (done)=> {
-      const trip = {
-        id: 1,
-        country_id: 3,
-        user_id: 9
-      }
       chai.request(app)
       .get('/api/trips/1')
       .end((error, res)=> {
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(res).to.be.a('object')
-        expect(trip.country_id).to.equal(3)
-        expect(trip.user_id).to.equal(9)
+        expect(res.body[0].country_id).to.equal(1)
+        expect(res.body[0].user_id).to.equal(1)
         done()
       })
     })
@@ -197,26 +203,34 @@ describe('Server should', ()=> {
   })
 
   // happy / sad path test for getting all trips associated with a user
-  describe('GET /api/user/:id/trips', ()=> {
+  describe('GET /api/user/trips/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                database('trips').insert({
+                  user_id: 1,
+                  country_id: 1,
+                  created_at: new Date
+                }).then(function(){
+                  done()
+                })
+              })
+            })
+    })
     it('should return 200 with all trips for specific user', (done)=> {
-      const trips = [{
-        id: 1,
-        country_id: 3,
-        user_id: 9
-      },
-      {
-        id: 2,
-        country_id: 11,
-        user_id: 9
-      }]
       chai.request(app)
       .get('/api/user/1/trips')
       .end((error, res)=> {
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(res).to.be.a('object')
-        expect(trips).to.have.length(2)
-        expect(trips[0].user_id === trips[1].user_id)
+        expect(res.body).to.equal(1)
         done()
       })
     })
@@ -232,31 +246,87 @@ describe('Server should', ()=> {
 
   // happy / sad path test for getting all trips associated with a country
   describe('GET /api/trips/country/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                database('trips').insert({
+                  user_id: 1,
+                  country_id: 1,
+                  created_at: new Date
+                }).then(function(){
+                  done()
+                })
+              })
+            })
+    })
     it('should return 200 with all trips for specific country', (done)=> {
-      const trips = [{
-        id: 1,
-        country_id: 3,
-        user_id: 9
-      },
-      {
-        id: 2,
-        country_id: 3,
-        user_id: 2
-      }]
       chai.request(app)
-      .get('/api/trips/country/3')
+      .get('/api/trips/country/1')
       .end((error, res)=> {
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(res).to.be.a('object')
-        expect(trips).to.have.length(2)
-        expect(trips[0].country_id === trips[1].country_id)
+        expect(res.body[0].country_id).to.equal(1)
         done()
       })
     })
     it('should return 404 if incorrect path is entered', (done)=> {
       chai.request(app)
-      .get('/api/trips/coutry/3')
+      .get('/api/trips/county/1')
+      .end((error, res)=> {
+        expect(res).to.have.status(404)
+        done()
+      })
+    })
+  })
+
+  // happy / sad path test for getting the number of trips associated with a user
+  describe('GET /api/user/:id/trips', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                database('trips').insert({
+                  user_id: 1,
+                  country_id: 1,
+                  created_at: new Date
+                }).then(function(){
+                  database('trips').insert({
+                    user_id: 1,
+                    country_id: 1,
+                    created_at: new Date
+                  }).then(function(){
+                    done()
+                  })
+                })
+              })
+            })
+    })
+    it('should return 200 number of trips for specific user', (done)=> {
+      chai.request(app)
+      .get('/api/user/1/trips')
+      .end((error, res)=> {
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res).to.be.a('object')
+        expect(res.body).to.equal(2)
+        done()
+      })
+    })
+    it('should return 404 if incorrect path is entered', (done)=> {
+      chai.request(app)
+      .get('/api/trips/user/tirps/9')
       .end((error, res)=> {
         expect(res).to.have.status(404)
         done()
@@ -266,7 +336,7 @@ describe('Server should', ()=> {
 
   // happy / sad path for posting a new user
   describe('POST /api/users', ()=> {
-    xit('should post a new user', ()=> {
+    it('should post a new user', (done)=> {
       chai.request(app)
       .post('/api/users')
       .send({
@@ -277,8 +347,8 @@ describe('Server should', ()=> {
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(res.body).to.be.a('array')
-        expect(res.body).to.have.length(3)
-        expect(res.body[2].name).to.be('Luna Lovegood')
+        expect(res.body).to.have.length(1)
+        expect(res.body[0].name).to.equal('Luna Lovegood')
         done()
       })
     })
@@ -294,19 +364,19 @@ describe('Server should', ()=> {
 
   // happy / sad path for posting a new country
   describe('POST /api/countries', ()=> {
-    xit('should post a new country', ()=> {
+    it('should post a new country', (done)=> {
       chai.request(app)
       .post('/api/countries')
       .send({
-        id: 31,
+        id: 1,
         name: 'Canada'
       })
       .end((error, res)=> {
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(res.body).to.be.a('array')
-        expect(res.body.id).to.be(31)
-        expect(res.body.name).to.be('Canada')
+        expect(res.body[0].id).to.equal(1)
+        expect(res.body[0].name).to.equal('Canada')
         done()
       })
     })
@@ -322,21 +392,34 @@ describe('Server should', ()=> {
 
   // happy / sad path for posting a new trip
   describe('POST /api/trips', ()=> {
-    xit('should post a new trip', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                    done()
+                })
+              })
+    })
+    it('should post a new trip', (done)=> {
       chai.request(app)
       .post('/api/trips')
       .send({
-        id: 31,
-        country_id: 25,
-        user_id: 11
+        id: 1,
+        country_id: 1,
+        user_id: 1
       })
       .end((error, res)=> {
         expect(res).to.have.status(200)
         expect(res).to.be.json
-        expect(res.body).to.be.a('object')
-        expect(res.body.id).to.be(31)
-        expect(res.body.country_id).to.be(25)
-        expect(res.body.user_id).to.be(11)
+        expect(res.body).to.be.a('array')
+        expect(res.body[0].id).to.equal(1)
+        expect(res.body[0].country_id).to.equal(1)
+        expect(res.body[0].user_id).to.equal(1)
         done()
       })
     })
@@ -349,5 +432,233 @@ describe('Server should', ()=> {
       })
     })
   })
+
+  // happy / sad path for patching a user
+  describe('PATCH /api/users/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Luna Lovegood',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should edit a users name', (done)=> {
+      chai.request(app)
+      .patch('/api/users/1')
+      .send({
+        name: 'Luna Longbottom'
+      })
+      .end((error, res)=> {
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res.body).to.be.a('array')
+        expect(res.body[0].name).to.equal('Luna Longbottom')
+        done()
+      })
+    })
+    it('should return 404 if incorrect path is entered', (done)=> {
+      chai.request(app)
+      .post('/api/usrs/1')
+      .end((error, res)=> {
+        expect(res).to.have.status(404)
+        done()
+      })
+    })
+  })
+
+  // happy / sad path for patching a country
+  describe('PATCH /api/countries/:id', ()=> {
+    beforeEach(function(done){
+      database('countries').insert({
+              name: 'US Virgin',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should edit a countries name', (done)=> {
+      chai.request(app)
+      .patch('/api/countries/1')
+      .send({
+        name: 'US Virgin Islands'
+      })
+      .end((error, res)=> {
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res.body).to.be.a('array')
+        expect(res.body[0].name).to.equal('US Virgin Islands')
+        done()
+      })
+    })
+    it('should return 404 if incorrect path is entered', (done)=> {
+      chai.request(app)
+      .post('/api/contries/1')
+      .end((error, res)=> {
+        expect(res).to.have.status(404)
+        done()
+      })
+    })
+  })
+
+  // happy / sad path for patching a trip
+  describe('PATCH /api/trips/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                database('countries').insert({
+                  name: 'Bermuda',
+                  created_at: new Date
+                }).then(function(){
+                  database('trips').insert({
+                    user_id: 1,
+                    country_id: 2,
+                    created_at: new Date
+                  }).then(function(){
+                    done()
+                  })
+                })
+              })
+            })
+    })
+    it('should edit a trips country id', (done)=> {
+      chai.request(app)
+      .patch('/api/trips/1')
+      .send({
+        country_id: 2,
+      })
+      .end((error, res)=> {
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res.body[0].country_id).to.equal(2)
+        expect(res.body[0].user_id).to.equal(1)
+        done()
+      })
+    })
+    it('should return 404 if incorrect path is entered', (done)=> {
+      chai.request(app)
+      .post('/api/contries/1')
+      .end((error, res)=> {
+        expect(res).to.have.status(404)
+        done()
+      })
+    })
+  })
+
+  // happy / sad path for deleting a user
+  describe('DELETE /api/users/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Severus Snape',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should delete a user', (done)=> {
+      chai.request(app)
+      .delete('/api/users/1')
+      .end((error, res)=> {
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res.body).to.be.a('array')
+        expect(res.body).to.have.length(0)
+        done()
+      })
+    })
+    it('should return 404 if incorrect path is entered', (done)=> {
+      chai.request(app)
+      .post('/api/ursr')
+      .end((error, res)=> {
+        expect(res).to.have.status(404)
+        done()
+      })
+    })
+  })
+
+  // happy / sad path for deleting a country
+  describe('DELETE /api/counties/:id', ()=> {
+    beforeEach(function(done){
+      database('countries').insert({
+              name: 'Hogwarts',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should delete a country', (done)=> {
+      chai.request(app)
+      .delete('/api/countries/1')
+      .end((error, res)=> {
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res.body).to.be.a('array')
+        expect(res.body).to.have.length(0)
+        done()
+      })
+    })
+    it('should return 404 if incorrect path is entered', (done)=> {
+      chai.request(app)
+      .post('/api/countris/1')
+      .end((error, res)=> {
+        expect(res).to.have.status(404)
+        done()
+      })
+    })
+  })
+
+  // happy / sad path for deleting a trip
+  describe('DELETE /api/trip/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                database('countries').insert({
+                  name: 'Bermuda',
+                  created_at: new Date
+                }).then(function(){
+                  database('trips').insert({
+                    user_id: 1,
+                    country_id: 2,
+                    created_at: new Date
+                  }).then(function(){
+                    done()
+                  })
+                })
+              })
+            })
+    })
+    it('should delete a trip', (done)=> {
+      chai.request(app)
+      .delete('/api/trips/1')
+      .end((error, res)=> {
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res.body).to.be.a('array')
+        expect(res.body).to.have.length(0)
+        done()
+      })
+    })
+    it('should return 404 if incorrect path is entered', (done)=> {
+      chai.request(app)
+      .post('/api/trpis/1')
+      .end((error, res)=> {
+        expect(res).to.have.status(404)
+        done()
+      })
+    })
+  })
+
 
 })

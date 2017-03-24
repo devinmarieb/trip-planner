@@ -184,8 +184,11 @@ app.patch('/api/users/:id', (req, res)=> {
     .then((user)=> {
       let userName = req.body.name
       database('users').where('id', id).select().update({ name: userName })
-        .then((users)=> {
-          res.status(200).json(users)
+        .then(()=> {
+          database('users').where('id', id).select()
+            .then((user)=> {
+              res.status(200).json(user)
+            })
         })
     })
     .catch((error)=> {
@@ -200,8 +203,11 @@ app.patch('/api/countries/:id', (req, res)=> {
     .then((country)=> {
       let countryName = req.body.name
       database('countries').where('id', id).select().update({ name: countryName })
-        .then((countries)=> {
-          res.status(200).json(countries)
+        .then(()=> {
+          database('countries').where('id', id).select()
+            .then((country)=> {
+              res.status(200).json(country)
+            })
         })
     })
     .catch((error)=> {
@@ -216,8 +222,11 @@ app.patch('/api/trips/:id', (req, res)=> {
     .then((trip)=> {
       let countryId = req.body.country_id
       database('trips').where('id', id).select().update({ country_id: countryId })
-        .then((trips)=> {
-          res.status(200).json(trips)
+        .then(()=> {
+          database('trips').where('id', id).select()
+            .then((trip)=> {
+              res.status(200).json(trip)
+            })
         })
     })
     .catch((error)=> {
@@ -233,8 +242,11 @@ app.delete('/api/users/:id', (req, res)=> {
       database('trips').where('user_id', id).select().del()
         .then((user)=> {
           database('users').where('id', id).select().del()
-            .then((users)=> {
-              res.status(200).json(users)
+            .then(()=> {
+              database('users').where('id', id).select()
+                .then((user)=> {
+                  res.status(200).json(user)
+                })
             })
         })
     })
@@ -251,8 +263,11 @@ app.delete('/api/countries/:id', (req, res)=> {
       database('trips').where('country_id', id).select().del()
         .then((country)=> {
           database('countries').where('id', id).select().del()
-            .then((countries)=> {
-              res.status(200).json(countries)
+            .then(()=> {
+              database('countries').where('id', id).select()
+                .then((country)=> {
+                  res.status(200).json(country)
+                })
             })
         })
     })
@@ -267,8 +282,11 @@ app.delete('/api/trips/:id', (req, res)=> {
   database('trips').where('id', id).select()
     .then((trip)=> {
       database('trips').where('id', id).select().del()
-        .then((trips)=> {
-          res.status(200).json(trips)
+        .then(()=> {
+          database('trips').where('id', id).select()
+            .then((trip)=> {
+              res.status(200).json(trip)
+            })
         })
     })
     .catch((error)=> {
