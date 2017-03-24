@@ -1,8 +1,6 @@
-// https://restcountries.eu/
-// https://restcountries.eu/rest/v2/all
+// https://restcountries.eu/ <-- for future datas
+// https://restcountries.eu/rest/v2/all <-- for future datas
 
-// const http = require('http')
-// const path = require('path')
 const bodyParser = require('body-parser')
 const pg = require('pg');
 const express = require('express')
