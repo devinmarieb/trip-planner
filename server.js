@@ -16,6 +16,17 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.set('port', process.env.PORT || 8080)
 
+//loads all users at root
+app.get('/', (req, res)=> {
+  database('users').select()
+    .then((users)=> {
+      res.status(200).json(users)
+    })
+    .catch((error)=> {
+      console.error('The path you are trying to reach does not exist')
+    })
+})
+
 //gets all users + check for user query param
 //query param needs to be ?name='Devin%20Beliveau'
 app.get('/api/users', (req, res)=> {
@@ -26,7 +37,7 @@ app.get('/api/users', (req, res)=> {
         res.status(200).json(user)
       })
     .catch((error)=> {
-      console.error(error)
+      console.error('The path you are trying to reach does not exist')
     })
   } else {
       database('users').select()
@@ -34,7 +45,7 @@ app.get('/api/users', (req, res)=> {
         res.status(200).json(users)
     })
       .catch((error)=> {
-        console.error(error)
+        console.error('The path you are trying to reach does not exist')
       })
     }
 })
@@ -46,7 +57,7 @@ app.get('/api/countries', (req, res)=> {
       res.status(200).json(countries)
     })
     .catch((error)=> {
-      console.error(error)
+      console.error('The path you are trying to reach does not exist')
     })
 })
 
@@ -57,7 +68,7 @@ app.get('/api/trips', (req, res)=> {
       res.status(200).json(trips)
     })
     .catch((error)=> {
-      console.error(error)
+      console.error('The path you are trying to reach does not exist')
     })
 })
 
@@ -68,7 +79,7 @@ app.get('/api/users/:id', (req, res)=> {
     res.status(200).json(user)
   })
   .catch((error)=> {
-    console.error(error)
+    console.error('The user you are trying to find does not exist')
   })
 })
 
@@ -79,7 +90,7 @@ app.get('/api/countries/:id', (req, res)=> {
       res.status(200).json(country)
     })
     .catch((error)=> {
-      console.error(error)
+      console.error('Something is wrong with the request')
     })
 })
 
@@ -90,7 +101,7 @@ app.get('/api/trips/:id', (req, res)=> {
       res.status(200).json(trip)
     })
     .catch((error)=> {
-      console.error(error)
+      console.error('The trip you are trying to find does not exist')
     })
 })
 
@@ -102,7 +113,7 @@ app.get('/api/trips/user/trips/:id', (req, res)=> {
       res.status(200).json(trips)
     })
     .catch((error)=> {
-      console.error(error)
+      console.error('Something is wrong with the request')
     })
 })
 
@@ -114,7 +125,7 @@ app.get('/api/trips/country/:id', (req, res)=> {
       res.status(200).json(trips)
     })
   .catch((error)=> {
-    console.error(error)
+    console.error('Something is wrong with the request')
     })
 })
 
@@ -126,7 +137,7 @@ app.get('/api/user/:id/trips', (req, res)=> {
       res.status(200).json(trips.length)
     })
   .catch((error)=> {
-    console.error(error)
+    console.error('Something is wrong with the request')
     })
 })
 
@@ -140,7 +151,7 @@ app.post('/api/users', (req, res)=> {
           res.status(200).json(users)
         })
         .catch((error)=> {
-          console.log(error)
+          console.log('Something is wrong with the request')
         })
     })
 })
@@ -155,7 +166,7 @@ app.post('/api/countries', (req, res)=> {
           res.status(200).json(countries)
         })
         .catch((error)=> {
-          console.log(error)
+          console.log('Something is wrong with the request')
         })
     })
 })
@@ -170,7 +181,7 @@ app.post('/api/trips', (req, res)=> {
           res.status(200).json(trips)
         })
         .catch((error)=> {
-          console.log(error)
+          console.log('Something is wrong with the request')
         })
     })
 })
@@ -190,7 +201,7 @@ app.patch('/api/users/:id', (req, res)=> {
         })
     })
     .catch((error)=> {
-      console.log(error)
+      console.log('Something is wrong with the request')
     })
 })
 
@@ -209,7 +220,7 @@ app.patch('/api/countries/:id', (req, res)=> {
         })
     })
     .catch((error)=> {
-      console.log(error)
+      console.log('Something is wrong with the request')
     })
 })
 
@@ -228,7 +239,7 @@ app.patch('/api/trips/:id', (req, res)=> {
         })
     })
     .catch((error)=> {
-      console.log(error)
+      console.log('Something is wrong with the request')
     })
 })
 
@@ -249,7 +260,7 @@ app.delete('/api/users/:id', (req, res)=> {
         })
     })
     .catch((error)=> {
-      console.log(error)
+      console.log('Something is wrong with the request')
     })
 })
 
@@ -270,7 +281,7 @@ app.delete('/api/countries/:id', (req, res)=> {
         })
     })
     .catch((error)=> {
-      console.log(error)
+      console.log('Something is wrong with the request')
     })
 })
 
@@ -288,7 +299,7 @@ app.delete('/api/trips/:id', (req, res)=> {
         })
     })
     .catch((error)=> {
-      console.log(error)
+      console.log('Something is wrong with the request')
     })
 })
 

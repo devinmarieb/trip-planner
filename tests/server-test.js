@@ -353,6 +353,10 @@ afterEach(function(done) {
       })
     })
     it('should return 404 if incorrect path is entered', (done)=> {
+      const user = {
+        name: 2,
+        created_at: new Date
+      }
       chai.request(app)
       .post('/api/user')
       .end((error, res)=> {
