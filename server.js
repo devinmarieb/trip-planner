@@ -17,15 +17,15 @@ app.use(express.static('public'))
 app.set('port', process.env.PORT || 8080)
 
 //loads all users at root
-app.get('/', (req, res)=> {
-  database('countries').select()
-    .then((countries)=> {
-      res.status(200).json(countries)
-    })
-    .catch((error)=> {
-      console.error('The path you are trying to reach does not exist')
-    })
-})
+// app.get('/', (req, res)=> {
+//   database('countries').select()
+//     .then((countries)=> {
+//       res.status(200).json(countries)
+//     })
+//     .catch((error)=> {
+//       console.error('The path you are trying to reach does not exist')
+//     })
+// })
 
 //gets all users + check for user query param
 //query param needs to be ?name='Devin%20Beliveau'
