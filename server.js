@@ -12,7 +12,7 @@ const database = require('knex')(configuration)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(express.static('public'))
+app.use(express.static('public'))
 
 app.set('port', process.env.PORT || 8080)
 
