@@ -30,7 +30,7 @@ afterEach(function(done) {
   })
 })
 
-  // happy / sad path test for get all users //
+  // happy path for get all users + 404 incorrect path error
   describe('GET /api/users', ()=> {
     it('should return 200 with all users', (done)=> {
       chai.request(app)
@@ -52,7 +52,7 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path test for get all countries
+  // happy path for get all countries + 404 incorrect path error
   describe('GET /api/countries', ()=> {
     it('should return 200 with all countries', (done)=> {
       chai.request(app)
@@ -74,7 +74,7 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path test for get all trips
+  // happy path for get all trips + 404 incorrect path error
   describe('GET /api/trips', ()=> {
     it('should return 200 with all trips', (done)=> {
       chai.request(app)
@@ -96,7 +96,7 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path test for getting a specific user
+  // happy path for getting a specific user + 404 incorrect path error
   describe('GET /api/users/:id', ()=> {
     beforeEach(function(done){
       database('users').insert({
@@ -127,7 +127,27 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path test for getting a specific country
+  // sad path for getting a specific user
+  describe('GET /api/users/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should return 422 error if user does not exist', (done)=> {
+      chai.request(app)
+      .get('/api/users/100')
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        done()
+      })
+    })
+  })
+
+  // happy path for getting a specific country + 404 incorrect path error
   describe('GET /api/countries/:id', ()=> {
     beforeEach(function(done){
       database('countries').insert({
@@ -137,7 +157,6 @@ afterEach(function(done) {
               done()
             })
     })
-
     it('should return 200 with a specific country', (done)=> {
       chai.request(app)
       .get('/api/countries/1')
@@ -159,7 +178,27 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path test for getting a specific trip
+  // sad path for getting a specific country
+  describe('GET /api/countries/:id', ()=> {
+    beforeEach(function(done){
+      database('countries').insert({
+              name: 'Canada',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should return 422 error if country does not exist', (done)=> {
+      chai.request(app)
+      .get('/api/countries/100')
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        done()
+      })
+    })
+  })
+
+  // happy path for getting a specific trip + 404 incorrect path error
   describe('GET /api/trips/:id', ()=> {
     beforeEach(function(done){
       database('users').insert({
@@ -202,8 +241,39 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path test for getting all trips associated with a user
-  describe('GET /api/user/trips/:id', ()=> {
+  // sad path for getting a specific trip
+  describe('GET /api/trips/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                database('trips').insert({
+                  user_id: 1,
+                  country_id: 1,
+                  created_at: new Date
+                }).then(function(){
+                  done()
+                })
+              })
+            })
+    })
+    it('should return 422 error if trip does not exist', (done)=> {
+      chai.request(app)
+      .get('/api/trips/100')
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        done()
+      })
+    })
+  })
+
+  // happy path test for getting all trips associated with a user + 404 incorrect path error
+  describe('GET /api/trips/user/trips/:id', ()=> {
     beforeEach(function(done){
       database('users').insert({
               name: 'Neville Longbottom',
@@ -225,12 +295,12 @@ afterEach(function(done) {
     })
     it('should return 200 with all trips for specific user', (done)=> {
       chai.request(app)
-      .get('/api/user/1/trips')
+      .get('/api/trips/user/trips/1')
       .end((error, res)=> {
         expect(res).to.have.status(200)
         expect(res).to.be.json
         expect(res).to.be.a('object')
-        expect(res.body).to.equal(1)
+        expect(res.body[0].id).to.equal(1)
         done()
       })
     })
@@ -244,7 +314,38 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path test for getting all trips associated with a country
+  // sad path for getting all trips associated with a user
+  describe('GET /api/trips/user/trips/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                database('trips').insert({
+                  user_id: 1,
+                  country_id: 1,
+                  created_at: new Date
+                }).then(function(){
+                  done()
+                })
+              })
+            })
+    })
+    it('should return 422 with all trips for specific user', (done)=> {
+      chai.request(app)
+      .get('/api/trips/user/trips/100')
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        done()
+      })
+    })
+  })
+
+  // happy path for getting all trips associated with a country + 404 incorrect path error
   describe('GET /api/trips/country/:id', ()=> {
     beforeEach(function(done){
       database('users').insert({
@@ -286,7 +387,38 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path test for getting the number of trips associated with a user
+  // sad path for getting all trips associated with a country
+  describe('GET /api/trips/country/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                database('trips').insert({
+                  user_id: 1,
+                  country_id: 1,
+                  created_at: new Date
+                }).then(function(){
+                  done()
+                })
+              })
+            })
+    })
+    it('should return 422 with all trips for specific country', (done)=> {
+      chai.request(app)
+      .get('/api/trips/country/100')
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        done()
+      })
+    })
+  })
+
+  // happy path for getting the number of trips associated with a user + 404 incorrect path error
   describe('GET /api/user/:id/trips', ()=> {
     beforeEach(function(done){
       database('users').insert({
@@ -334,7 +466,38 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path for posting a new user
+  // sad path for getting the number of trips associated with a user
+  describe('GET /api/user/:id/trips', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                  database('trips').insert({
+                    user_id: 1,
+                    country_id: 1,
+                    created_at: new Date
+                  }).then(function(){
+                    done()
+                  })
+                })
+            })
+    })
+    it('should return 422 error if user does not exist', (done)=> {
+      chai.request(app)
+      .get('/api/user/100/trips')
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        done()
+      })
+    })
+  })
+
+  // happy path for posting a new user + 404 incorrect path error
   describe('POST /api/users', ()=> {
     it('should post a new user', (done)=> {
       chai.request(app)
@@ -366,7 +529,23 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path for posting a new country
+  // sad path for posting a new user
+  describe('POST /api/users', ()=> {
+    it('should throw 422 error if no name is entered', (done)=> {
+      chai.request(app)
+      .post('/api/users')
+      .send({
+        id: 31,
+      })
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        expect(res).to.be.a('object')
+        done()
+      })
+    })
+  })
+
+  // happy path for posting a new country + 404 incorrect path error
   describe('POST /api/countries', ()=> {
     it('should post a new country', (done)=> {
       chai.request(app)
@@ -394,7 +573,23 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path for posting a new trip
+  // sad path for posting a new country
+  describe('POST /api/countries', ()=> {
+    it('should throw 422 error if no name is entered', (done)=> {
+      chai.request(app)
+      .post('/api/countries')
+      .send({
+        id: 1,
+      })
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        expect(res.body).to.be.a('object')
+        done()
+      })
+    })
+  })
+
+  // happy path for posting a new trip + 404 incorrect path error
   describe('POST /api/trips', ()=> {
     beforeEach(function(done){
       database('users').insert({
@@ -437,7 +632,37 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path for patching a user
+  // sad path for posting a new trip
+  describe('POST /api/trips', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                    done()
+                })
+              })
+    })
+    it('should throw 422 error if no user_id/country_id is entered', (done)=> {
+      chai.request(app)
+      .post('/api/trips')
+      .send({
+        id: 1,
+        user_id: 1
+      })
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        expect(res.body).to.be.a('object')
+        done()
+      })
+    })
+  })
+
+  // happy path for patching a user + 404 incorrect path error
   describe('PATCH /api/users/:id', ()=> {
     beforeEach(function(done){
       database('users').insert({
@@ -471,7 +696,29 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path for patching a country
+  // sad path for patching a user
+  describe('PATCH /api/users/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Luna Lovegood',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should throw 422 error if no name is entered', (done)=> {
+      chai.request(app)
+      .patch('/api/users/1')
+      .send({})
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        expect(res.body).to.be.a('object')
+        done()
+      })
+    })
+  })
+
+  // happy path for patching a country + 404 incorrect path error
   describe('PATCH /api/countries/:id', ()=> {
     beforeEach(function(done){
       database('countries').insert({
@@ -505,7 +752,29 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path for patching a trip
+  // sad path for patching a country
+  describe('PATCH /api/countries/:id', ()=> {
+    beforeEach(function(done){
+      database('countries').insert({
+              name: 'US Virgin',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should edit a countries name', (done)=> {
+      chai.request(app)
+      .patch('/api/countries/1')
+      .send({})
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        expect(res.body).to.be.a('object')
+        done()
+      })
+    })
+  })
+
+  // happy path for patching a trip + 404 incorrect path error
   describe('PATCH /api/trips/:id', ()=> {
     beforeEach(function(done){
       database('users').insert({
@@ -555,7 +824,40 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path for deleting a user
+  // sad path for patching a trip
+  describe('PATCH /api/trips/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                  database('trips').insert({
+                    user_id: 1,
+                    country_id: 1,
+                    created_at: new Date
+                  }).then(function(){
+                    done()
+                  })
+                })
+              })
+            })
+    it('should throw 422 error if no country_id is entered', (done)=> {
+      chai.request(app)
+      .patch('/api/trips/1')
+      .send({})
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        expect(res).to.be.a('object')
+        done()
+      })
+    })
+  })
+
+  // happy path for deleting a user + 404 incorrect path error
   describe('DELETE /api/users/:id', ()=> {
     beforeEach(function(done){
       database('users').insert({
@@ -586,7 +888,27 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path for deleting a country
+  // sad path for deleting a user
+  describe('DELETE /api/users/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Severus Snape',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should throw 422 error if user does not exist', (done)=> {
+      chai.request(app)
+      .delete('/api/users/100')
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        done()
+      })
+    })
+  })
+
+  // happy path for deleting a country + 404 incorrect path error
   describe('DELETE /api/counties/:id', ()=> {
     beforeEach(function(done){
       database('countries').insert({
@@ -617,7 +939,27 @@ afterEach(function(done) {
     })
   })
 
-  // happy / sad path for deleting a trip
+  // sad path for deleting a country
+  describe('DELETE /api/counties/:id', ()=> {
+    beforeEach(function(done){
+      database('countries').insert({
+              name: 'Hogwarts',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should throw 422 error if country does not exist', (done)=> {
+      chai.request(app)
+      .delete('/api/countries/100')
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        done()
+      })
+    })
+  })
+
+  // happy path for deleting a trip + 404 incorrect path error
   describe('DELETE /api/trip/:id', ()=> {
     beforeEach(function(done){
       database('users').insert({
@@ -664,5 +1006,41 @@ afterEach(function(done) {
     })
   })
 
+  // sad path for deleting a trip
+  describe('DELETE /api/trip/:id', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Neville Longbottom',
+              created_at: new Date
+            }).then(function(){
+              database('countries').insert({
+                name: 'Aruba',
+                created_at: new Date
+              }).then(function(){
+                database('countries').insert({
+                  name: 'Bermuda',
+                  created_at: new Date
+                }).then(function(){
+                  database('trips').insert({
+                    user_id: 1,
+                    country_id: 2,
+                    created_at: new Date
+                  }).then(function(){
+                    done()
+                  })
+                })
+              })
+            })
+    })
+    it('should throw 422 error if trip does not exist', (done)=> {
+      chai.request(app)
+      .delete('/api/trips/100')
+      .end((error, res)=> {
+        expect(res).to.have.status(422)
+        done()
+      })
+    })
+  })
 
+//end tests
 })

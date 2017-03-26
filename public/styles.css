@@ -1,3 +1,16 @@
-body {
-  background-color: lightblue;
+.left {
+  float: left;
+  width: 50%;
+  height: 100vh;
+  text-align: center;
+  background-color: #E3655B;
+  color: white;
+}
+
+.right {
+  float: right;
+  width: 50%;
+  height: 100vh;
+  text-align: center;
+  background-color: #FFC15E;
 }
