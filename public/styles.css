@@ -19,7 +19,7 @@ body {
   margin: 0 auto;
   width: 70%;
   line-height: 200%;
-  font-size: 24px;
+  font-size: 18px;
   font-family: 'Playfair Display', serif;
   margin-bottom: 50px;
 }
@@ -35,7 +35,7 @@ body {
 }
 
 .github {
-  font-size: 24px;
+  font-size: 18px;
   text-decoration: none;
 }
 
@@ -51,7 +51,7 @@ body {
   width: 50%;
   height: 100vh;
   text-align: center;
-  font-size: 24px;
+  font-size: 18px;
   font-family: 'Playfair Display', serif;
 }
 
