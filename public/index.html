@@ -3,48 +3,63 @@
   <head>
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="styles.css">
-    <!-- <link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet"> -->
-    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Archivo+Black|Playfair+Display" rel="stylesheet">
     <title>BYOB</title>
   </head>
   <body>
     <section class="left">
       <h1 class="title">Build Your Own Backend</h1>
-      <h3>Get Request List:</h3>
-      <p>Click on a link or copy and paste link at end of URL to navigate</p>
+      <p class="directions">TripPlanner is a database of users, countries and user trips.
+        The links on this page are for all GET requets to the database.</p>
+      <p class="directions">Click on a link or copy and paste link at end of URL to navigate</p>
+      <p class="directions">POST, PATCH and DELETE requests will require Postman or similar.</p>
+      <div class="github-container">
+        <a href="https://github.com/devinmarieb/trip-planner"><img class="github-img" src="github.png" alt="github" style="vertical-align:middle"></a>
+        <a class="github" href="https://github.com/devinmarieb/trip-planner">See the code on GitHub</a>
+      </div>
     </section>
 
     <section class="right">
-
-      <p>get all users</p>
-      <a href="https://tripplannerprjct.herokuapp.com/api/users">/api/users</a>
-      <br>
-      <p>get all users matching query</p>
-      <a href="https://tripplannerprjct.herokuapp.com/api/users?name=Devin%20Beliveau">/api/users?name=Devin%20Beliveau</a>
-      <br>
-      <p>get all countries</p>
-      <a href="https://tripplannerprjct.herokuapp.com/api/countries">/api/countries</a>
-      <br>
-      <p>get all trips</p>
-      <a href="https://tripplannerprjct.herokuapp.com/api/trips">/api/trips</a>
-      <br>
-      <p>get user 23</p>
-      <a href="https://tripplannerprjct.herokuapp.com/api/users/23">/api/users/23</a>
-      <br>
-      <p>get country 23</p>
-      <a href="https://tripplannerprjct.herokuapp.com/api/countries/23">/api/countries/23</a>
-      <br>
-      <p>get trip 23</p>
-      <a href="https://tripplannerprjct.herokuapp.com/api/trips/23">/api/trips/23</a>
-      <br>
-      <p>get all trips for user 1</p>
-      <a href="https://tripplannerprjct.herokuapp.com/api/trips/user/trips/1">/api/trips/user/trips/1</a>
-      <br>
-      <p>get # of trips for user 1</p>
-      <a href="https://tripplannerprjct.herokuapp.com/api/user/1/trips">/api/trips/user/1/trips</a>
-      <br>
-      <p>get all trips for country 1</p>
-      <a href="https://tripplannerprjct.herokuapp.com/api/trips/country/1">/api/trips/country/1</a>
+      <div id='one'>
+        <p>get all users</p>
+        <a href="https://tripplannerprjct.herokuapp.com/api/users">/api/users</a>
+      </div>
+      <div id='two'>
+        <p>get # of trips for user 1</p>
+        <a href="https://tripplannerprjct.herokuapp.com/api/user/1/trips">/api/trips/user/1/trips</a>
+      </div>
+      <div id='three'>
+        <p>get all users matching query</p>
+        <a href="https://tripplannerprjct.herokuapp.com/api/users?name=Devin%20Beliveau">/api/users?name=Devin%20Beliveau</a>
+      </div>
+      <div id='four'>
+        <p>get user 23</p>
+        <a href="https://tripplannerprjct.herokuapp.com/api/users/23">/api/users/23</a>
+      </div>
+      <div id='five'>
+        <p>get all countries</p>
+        <a href="https://tripplannerprjct.herokuapp.com/api/countries">/api/countries</a>
+      </div>
+      <div id='six'>
+        <p>get country 23</p>
+        <a href="https://tripplannerprjct.herokuapp.com/api/countries/23">/api/countries/23</a>
+      </div>
+      <div id='seven'>
+        <p>get all trips</p>
+        <a href="https://tripplannerprjct.herokuapp.com/api/trips">/api/trips</a>
+      </div>
+      <div id='eight'>
+        <p>get trip 23</p>
+        <a href="https://tripplannerprjct.herokuapp.com/api/trips/23">/api/trips/23</a>
+      </div>
+      <div id='nine'>
+        <p>get all trips for user 1</p>
+        <a href="https://tripplannerprjct.herokuapp.com/api/trips/user/trips/1">/api/trips/user/trips/1</a>
+      </div>
+      <div id='ten'>
+        <p>get all trips for country 1</p>
+        <a href="https://tripplannerprjct.herokuapp.com/api/trips/country/1">/api/trips/country/1</a>
+      </div>
     </section>
 
     <script src="/index.js"></script>

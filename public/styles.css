@@ -1,16 +1,76 @@
+body {
+  color: white;
+}
+
 .left {
   float: left;
   width: 50%;
   height: 100vh;
   text-align: center;
-  background-color: #E3655B;
-  color: white;
+  background-color: #FFC15E;
+}
+
+.title {
+  font-size: 42px;
+  font-family: 'Archivo Black', sans-serif;
+}
+
+.directions {
+  margin: 0 auto;
+  width: 70%;
+  line-height: 200%;
+  font-size: 24px;
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 50px;
+}
+
+.github-container {
+  position: absolute;
+  bottom: 20px;
+}
+
+.github-img {
+  margin-right: 15px;
+  width: 100px;
+}
+
+.github {
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.github:hover {
+  color: #345995;
 }
 
 .right {
   float: right;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   width: 50%;
   height: 100vh;
   text-align: center;
-  background-color: #FFC15E;
+  font-size: 24px;
+  font-family: 'Playfair Display', serif;
+}
+
+a {
+  color: white;
+}
+
+a:hover {
+  color: #FFC15E;
+}
+
+div {
+  width: 50%;
+}
+
+#one, #four, #five, #eight, #nine {
+  background-color: #345995;
+}
+
+#two, #three, #six, #seven, #ten {
+  background-color: #92AFD7;
 }
