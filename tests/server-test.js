@@ -52,6 +52,29 @@ afterEach(function(done) {
     })
   })
 
+  // happy path for get all users with req query
+  describe('GET /api/users?name=Devin%20Beliveau', ()=> {
+    beforeEach(function(done){
+      database('users').insert({
+              name: 'Devin Beliveau',
+              created_at: new Date
+            }).then(function(){
+              done()
+            })
+    })
+    it('should return 200 with all users with matching name query', (done)=> {
+      chai.request(app)
+      .get('/api/users?name=Devin%20Beliveau')
+      .end((error, res)=> {
+        expect(res).to.have.status(200)
+        expect(res).to.be.json
+        expect(res).to.be.a('object')
+        expect(res.body[0].name).to.equal('Devin Beliveau')
+        done()
+      })
+    })
+  })
+
   // happy path for get all countries + 404 incorrect path error
   describe('GET /api/countries', ()=> {
     it('should return 200 with all countries', (done)=> {
