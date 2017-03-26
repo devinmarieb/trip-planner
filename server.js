@@ -22,8 +22,12 @@ app.get('/api/users', (req, res)=> {
   let userQuery = req.query.name
   if(userQuery) {
     database('users').where('name', userQuery).select()
-      .then((user)=> {
-        res.status(200).json(user)
+      .then((users)=> {
+        if(users.length < 1) {
+          res.status(422).send('That user does not exist')
+        } else {
+        res.status(200).json(users)
+        }
       })
     .catch((error)=> {
       console.error('The path you are trying to reach does not exist')
