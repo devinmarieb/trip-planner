@@ -3,3 +3,7 @@ machine:
     version: 7.0.0
   timezone:
     America/Denver
+
+test:
+  override:
+    - npm run test
