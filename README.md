@@ -50,4 +50,4 @@ I'm still a little confused about headers. After reading the JSON docs, I'm not 
 
 Instructor Feedback
 
-Points: x / 150
+Points: 150 / 150
