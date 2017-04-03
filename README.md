@@ -18,7 +18,7 @@ I have eighteen endpoints for TripPlanner:
 
 3 `DELETE` requests
 
-I have 53 passing tests for TripPlanner. All endpoints have a test that checks for `status 200` and `status 404`. Where applicable, endpoints are tested for `status 422`.
+I have 35 passing tests for TripPlanner. All endpoints have a test that checks for `status 200` and `status 404`. Where applicable, endpoints are tested for `status 422`.
 
 ### JSON: notes after reading the JSON docs (or as much of it as I could actually understand).
 
